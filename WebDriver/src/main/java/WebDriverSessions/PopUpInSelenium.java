@@ -2,19 +2,21 @@ package WebDriverSessions;
 
 import java.time.Duration;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class FramesInWD {
+public class PopUpInSelenium {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		String url = "https://www.globalsqa.com/demo-site/frames-and-windows/#iFrame";
+		String url = "https://demo.guru99.com/test/delete_customer.php";
 
 		JavascriptExecutor js;
 
@@ -34,31 +36,36 @@ public class FramesInWD {
 
 		System.out.println(driver.getTitle());
 		
-		String framesName = "globalSqa";
+		WebElement customerID = driver.findElement(By.name("cusid"));
 		
-		driver.switchTo().frame(framesName);
+		js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');", customerID);
 		
-		WebElement Trainings = driver.findElement(By.xpath("//a[@title='Trainings']"));
+		customerID.sendKeys("1234");
 		
-		js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');", Trainings);
+		customerID.sendKeys(Keys.ENTER);
 		
-		Trainings.click();
+		Alert alert = driver.switchTo().alert();
 		
-		driver.switchTo().defaultContent();
+		Thread.sleep(3000);
 		
-		WebElement openNewWindowTab = driver.findElement(By.id("Open New Window"));
+		System.out.println("Alert Text : "+alert.getText());
 		
-		js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');", openNewWindowTab);
+		alert.accept();
+		
+		Thread.sleep(3000);
+		
+		System.out.println("First Alert was handled");
+		
+		alert.accept();
+		
+		System.out.println("Second Alert was handled");
 
 		
-		openNewWindowTab.click();
-		
-		//come out of first frame
-		//driver.switchTo().defaultContent();
-		
-		Thread.sleep(3500);
+		Thread.sleep(3000);
 		
 		driver.close();
+		
+		
 	}
 
 }
